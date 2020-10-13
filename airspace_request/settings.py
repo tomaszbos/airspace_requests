@@ -25,7 +25,7 @@ try:
     from airspace_request.local_settings import SECRET_KEY
 except ModuleNotFoundError:
     print("Missing security key in local_settings.py!")
-    exit(0)
+    exit(0)  # TODO: Czy nie powinno tutaj być sys.exit(0)?
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -7,7 +7,7 @@ ROLE_CHOICES = [
     ('military', 'Wojsko Polskie'),
     ('sport_club', 'Aeroklub'),
     ('company', 'Firma'),
-    ('PANSA', 'PAŻP')
+    ('PANSA', 'PAŻP'),
 ]
 
 AIRSPACE_TYPES = [
@@ -96,12 +96,12 @@ ALTITUDES = [
 ]
 
 
-class AirspaceStructure(models.Model):
-    name = models.CharField(max_length=30)
-    airspace_type = models.CharField(max_length=5, choices=AIRSPACE_TYPES)
-    localization = gis_models.MultiPolygonField()
-    lower_limit = models.CharField(max_length=5, choices=ALTITUDES)
-    upper_limit = models.CharField(max_length=5, choices=ALTITUDES)
+class AirspaceStructure(gis_models.Model):
+    name = gis_models.CharField(max_length=30)
+    airspace_type = gis_models.CharField(max_length=5, choices=AIRSPACE_TYPES)
+    lower_limit = gis_models.CharField(max_length=5, choices=ALTITUDES)
+    upper_limit = gis_models.CharField(max_length=5, choices=ALTITUDES)
+    localization = gis_models.PolygonField()
 
     def __str__(self):
         return f"Name: {self.name}, type: {self.airspace_type}"
