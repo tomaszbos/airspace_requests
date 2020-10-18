@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib.gis.db import models as gis_models
 
+from .validators import aup_validator_since, aup_validator_to, reservation_validator_since, reservation_validator_to
+
 
 ROLE_CHOICES = [
     ('military', 'Wojsko Polskie'),
@@ -107,12 +109,12 @@ class AirspaceStructure(gis_models.Model):
         return f"Name: {self.name}, type: {self.airspace_type}"
 
 
-class Reservations(models.Model):
+class Reservation(models.Model):
     airspace_structure = models.ForeignKey(AirspaceStructure, on_delete=models.CASCADE)
     lower_limit = models.CharField(max_length=5, choices=ALTITUDES)
     upper_limit = models.CharField(max_length=5, choices=ALTITUDES)
-    activation_time = models.DateTimeField()
-    deactivation_time = models.DateTimeField()
+    activation_time = models.DateTimeField(validators=[reservation_validator_since])
+    deactivation_time = models.DateTimeField(validators=[reservation_validator_to])
 
     def __str__(self):
         return f"""
@@ -122,3 +124,10 @@ class Reservations(models.Model):
                 Activation at: {self.activation_time}
                 Deactivation at: {self.deactivation_time}
                 """
+
+
+class Aup(models.Model):
+    creation_time = models.DateTimeField(auto_now_add=True)
+    validity_time_since = models.DateField(validators=[aup_validator_since])
+    validity_time_to = models.DateField(validators=[aup_validator_to])
+    requests = models.ManyToManyField(Reservation)
