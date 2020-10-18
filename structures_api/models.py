@@ -105,3 +105,20 @@ class AirspaceStructure(gis_models.Model):
 
     def __str__(self):
         return f"Name: {self.name}, type: {self.airspace_type}"
+
+
+class Reservations(models.Model):
+    airspace_structure = models.ForeignKey(AirspaceStructure, on_delete=models.CASCADE)
+    lower_limit = models.CharField(max_length=5, choices=ALTITUDES)
+    upper_limit = models.CharField(max_length=5, choices=ALTITUDES)
+    activation_time = models.DateTimeField()
+    deactivation_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"""
+                Reservation on: {self.airspace_structure}
+                Altitude lower limit: {self.lower_limit}
+                Altitude upper limit: {self.upper_limit}
+                Activation at: {self.activation_time}
+                Deactivation at: {self.deactivation_time}
+                """
