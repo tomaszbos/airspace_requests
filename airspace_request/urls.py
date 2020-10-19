@@ -22,4 +22,6 @@ from structures_api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.LandingPage.as_view(), name='index'),
+    path('aup/', views.AupPreview.as_view(), name='aup'),
+    path('request/', views.AirspaceRequest.as_view(), name='request'),
 ]
