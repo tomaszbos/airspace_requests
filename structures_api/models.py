@@ -113,8 +113,10 @@ class Reservation(models.Model):
     airspace_structure = models.ForeignKey(AirspaceStructure, on_delete=models.CASCADE)
     lower_limit = models.CharField(max_length=5, choices=ALTITUDES)
     upper_limit = models.CharField(max_length=5, choices=ALTITUDES)
-    activation_time = models.DateTimeField(validators=[reservation_validator_since])
-    deactivation_time = models.DateTimeField(validators=[reservation_validator_to])
+    activation_date = models.DateField(validators=[reservation_validator_since])
+    deactivation_date = models.DateField(validators=[reservation_validator_to])
+    activation_time = models.TimeField()
+    deactivation_time = models.TimeField()
 
     def __str__(self):
         return f"""

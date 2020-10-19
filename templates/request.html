@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
-{% block style %}
-
-{% endblock style %}
 {% block body %}
     <div class="navbar navbar-dark bg-pansa">
         <h3 class="titles">Airspace reservation form</h3>
+    </div>
+    <div class="container">
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
     </div>
 {% endblock body %}
