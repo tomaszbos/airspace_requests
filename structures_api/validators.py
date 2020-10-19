@@ -30,22 +30,22 @@ def aup_validator_to(date_to):
 
 
 def reservation_validator_since(reservation_since):
-    if reservation_since <= utc.localize(datetime.today()):
+    if reservation_since <= date.today():
         raise ValidationError(
             _(f"{reservation_since} too soon! Make reservation with proper advance!")
         )
-    if reservation_since > utc.localize(datetime.today() + timedelta(days=1)):
+    if reservation_since > date.today() + timedelta(days=1):
         raise ValidationError(
             _(f"{reservation_since} too long advance! Make reservation with proper advance!")
         )
 
 
 def reservation_validator_to(reservation_to):
-    if reservation_to > utc.localize(datetime.today() + timedelta(days=1)):
+    if reservation_to > date.today() + timedelta(days=1):
         raise ValidationError(
             _(f"{reservation_to} too late! Make reservation with proper advance!")
         )
-    if reservation_to <= utc.localize(datetime.today()):
+    if reservation_to <= date.today():
         raise ValidationError(
             _(f"{reservation_to} too soon! Make reservation with proper advance!")
         )
