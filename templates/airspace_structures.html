@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="navbar navbar-dark bg-pansa">
+        <h3 class="titles">Airspace structures list</h3>
+    </div>
+    <div class="container">
+    <ul>
+        {% for airspace_structure in airspace_structure_list %}
+            <li>{{ airspace_structure.name }} {{ airspace_structure.airspace_type }} {{ airspace_structure.lower_limit }} {{ airspace_structure.upper_limit }}</li>
+            <li>{{ airspace_structure.localization }}</li>
+        {% empty %}
+            <li>No Airspace Structures in database!</li>
+        {% endfor %}
+    </ul>
+    </div>
+{% endblock body %}

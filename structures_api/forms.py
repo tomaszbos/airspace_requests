@@ -21,3 +21,8 @@ class ReservationForm(forms.ModelForm):
             'activation_time': forms.TimeInput(),
             'deactivation_time': forms.TimeInput(),
         }
+
+
+class RegistrationForm(forms.Form):
+    username = forms.CharField(max_length=255)
+    password = forms.CharField(widget=forms.PasswordInput())
