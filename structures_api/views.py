@@ -16,7 +16,7 @@ class AupPreview(View):
         return render(request, 'aup.html')
 
 
-class AirspaceRequest(CreateView):
+class AirspaceRequest(FormView):
     # def get(self, request, *args, **kwargs):
     #     form = ReservationForm()
     #     context = {'form': form}
