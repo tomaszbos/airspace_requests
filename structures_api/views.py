@@ -1,12 +1,13 @@
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, FormView, ListView, View
+from django.views.generic import DetailView, FormView, ListView, View
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import ReservationForm, RegistrationForm
-from .models import AirspaceStructure, Aup, Reservation
+from .models import AirspaceStructure
 
 User_base = get_user_model()
 
@@ -21,12 +22,33 @@ class AupPreview(View):
         return render(request, 'aup.html')
 
 
-class AirspaceRequest(FormView):
+class AirspaceRequest(LoginRequiredMixin, FormView):
     form_class = ReservationForm
     success_url = reverse_lazy('index')
     template_name = 'request.html'
 
     def form_valid(self, form):
+        structure = form.cleaned_data['airspace_structure']
+        structure_type = structure.airspace_type
+        if structure_type == 'D'\
+                or structure_type == 'R'\
+                or structure_type == 'P'\
+                or structure_type == 'CTR'\
+                or structure_type == 'TMA'\
+                or structure_type == 'MCTR'\
+                or structure_type == 'MTMA'\
+                or structure_type == 'ADIZ':
+            return render(self.request, 'access_denied.html')
+        elif structure_type == 'TSA' and not self.request.user.has_perm('structures_api.request_tsa'):
+            return render(self.request, 'access_denied.html')
+        elif structure_type == 'TRA' and not self.request.user.has_perm('structures_api.request_tra'):
+            return render(self.request, 'access_denied.html')
+        elif structure_type == 'EA' and not self.request.user.has_perm('structures_api.request_ea'):
+            return render(self.request, 'access_denied.html')
+        elif structure_type == 'ATZ' and not self.request.user.has_perm('structures_api.request_atz'):
+            return render(self.request, 'access_denied.html')
+        elif structure_type == 'MRT' and not self.request.user.has_perm('structures_api.request_mrt'):
+            return render(self.request, 'access_denied.html')
         form.save()
         return super().form_valid(form)
 
@@ -57,7 +79,7 @@ class UserDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        return context # TODO: Fix the view!
+        return context  # TODO: Fix the view!
 
 
 class UserLogoutView(LogoutView):
@@ -66,6 +88,5 @@ class UserLogoutView(LogoutView):
 
 class AirspaceStructuresView(ListView):
     model = AirspaceStructure
-    paginate_by = 25
     template_name = 'airspace_structures.html'
     context_object_name = 'airspace_structure_list'
