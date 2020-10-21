@@ -1,16 +1,7 @@
 from django.db import models
-from django.contrib.auth import models as auth_models
 from django.contrib.gis.db import models as gis_models
 
 from .validators import aup_validator_since, aup_validator_to, reservation_validator_since, reservation_validator_to
-
-
-ROLE_CHOICES = [
-    ('military', 'Wojsko Polskie'),
-    ('sport_club', 'Aeroklub'),
-    ('company', 'Firma'),
-    ('PANSA', 'PAŻP'),
-]
 
 AIRSPACE_TYPES = [
     ('TSA', 'TSA'),
@@ -23,8 +14,9 @@ AIRSPACE_TYPES = [
     ('TMA', 'TMA'),
     ('ATZ', 'ATZ'),
     ('MCTR', 'MCTR'),
-    ('ADIZ', 'ADIZ'),
     ('MTMA', 'MTMA'),
+    ('ADIZ', 'ADIZ'),
+    ('MRT', 'MRT'),
 ]
 
 ALTITUDES = [
@@ -126,6 +118,15 @@ class Reservation(models.Model):
                 Activation at: {self.activation_time}
                 Deactivation at: {self.deactivation_time}
                 """
+
+    class Meta:
+        permissions = [
+            ("request_tsa", "Can request TSA type airspace"),
+            ("request_tra", "Can request TRA type airspace"),
+            ("request_ea", "Can request EA type airspace"),
+            ("request_atz", "Can request ATZ type airspace"),
+            ("request_mrt", "Can request MRT type airspace"),
+        ]
 
 
 class Aup(models.Model):

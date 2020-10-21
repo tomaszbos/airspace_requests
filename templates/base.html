@@ -65,11 +65,13 @@
     <!-- Footer -->
     <footer class="footer">
           <div class="container">
-            <span class="text-muted">Another bug bites the dust</span>
+              <span class="text-muted">Another bug bites the dust</span>
+                <span class="text-muted" style="float: right">
+                    {% if request.user.is_authenticated %}
+                        {{ request.user.username }} <a href="{% url 'logout' %}">Logout</a>
+                    {% endif %}
+                </span>
           </div>
-{#            {% if request.user.is_authenticated %}#}
-{#                {{ request.user.username }} <a href="">Logout</a>#}
-{#            {% endif %}#}
     </footer>
     <!-- Footer -->
 </html>
