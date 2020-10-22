@@ -1,5 +1,5 @@
 # Specific for Airspace Request project
-./node_modules
+/node_modules/
 package.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,django,pycharm+all

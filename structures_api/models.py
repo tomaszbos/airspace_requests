@@ -134,3 +134,26 @@ class Aup(models.Model):
     validity_time_since = models.DateField(validators=[aup_validator_since])
     validity_time_to = models.DateField(validators=[aup_validator_to])
     requests = models.ManyToManyField(Reservation)
+
+
+class WorldBorder(gis_models.Model):
+    # Regular Django fields corresponding to the attributes in the
+    # world borders shapefile.
+    name = gis_models.CharField(max_length=50)
+    area = gis_models.IntegerField()
+    pop2005 = gis_models.IntegerField('Population 2005')
+    fips = gis_models.CharField('FIPS Code', max_length=2, null=True)
+    iso2 = gis_models.CharField('2 Digit ISO', max_length=2)
+    iso3 = gis_models.CharField('3 Digit ISO', max_length=3)
+    un = gis_models.IntegerField('United Nations Code')
+    region = gis_models.IntegerField('Region Code')
+    subregion = gis_models.IntegerField('Sub-Region Code')
+    lon = gis_models.FloatField()
+    lat = gis_models.FloatField()
+
+    # GeoDjango-specific: a geometry field (MultiPolygonField)
+    mpoly = gis_models.MultiPolygonField()
+
+    # Returns the string representation of the model.
+    def __str__(self):
+        return self.name

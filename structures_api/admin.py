@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.gis import admin as geo_admin
 
-from .models import AirspaceStructure, Aup, Reservation
+from .models import AirspaceStructure, Aup, Reservation, WorldBorder
 
 
 @admin.register(AirspaceStructure)
-class AirspaceStructuresAdmin(admin.ModelAdmin):
+class AirspaceStructuresAdmin(geo_admin.OSMGeoAdmin):
     ordering = ['name']
     search_fields = ['name', 'airspace_type']
     list_display = ('name', 'airspace_type', 'lower_limit', 'upper_limit')
@@ -33,3 +34,6 @@ class ReservationsAdmin(admin.ModelAdmin):
                     'upper_limit',
                     )
     list_filter = ('airspace_structure', 'activation_date', 'activation_time', 'deactivation_time',)
+
+
+admin.site.register(WorldBorder, geo_admin.OSMGeoAdmin)
