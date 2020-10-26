@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.views.generic import DetailView, FormView, ListView, View, TemplateView, CreateView
+from django.views.generic import FormView, ListView, View, TemplateView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
@@ -17,36 +17,54 @@ User_base = get_user_model()
 
 
 class StructuresGeoJson(GeoJSONLayerView):
+    """
+    Creates JSON of Airspace Structures.
+    """
     template_name = 'geojson.html'
     queryset = AirspaceStructure.objects.all()
     geometry_field = 'localization'
 
 
 class AupGeoJson(GeoJSONLayerView):
+    """
+    Creates JSON of Airspace Structures for valid AUP.
+    """
     template_name = 'geojson.html'
-    aup = Aup.objects.get(validity_time_to=date.today())
-    queryset = aup.requests
-    geometry_field = 'airspace_structure.localization'
+    reservations = Reservation.objects.filter(deactivation_date__lte=date.today())
+    queryset_list = []
+    for reservation in reservations:
+        structure = AirspaceStructure.objects.get(pk=reservation.airspace_structure_id)
+        queryset_list.append(structure.pk)
+    queryset = AirspaceStructure.objects.filter(pk__in=queryset_list)
+    geometry_field = 'localization'
 
 
 class LandingPage(TemplateView):
-    def get(self, request, *args, **kwargs):
-        airspace_structures = AirspaceStructure.objects.all()
-        context = {'airspace_structures': airspace_structures}
-        return render(request, 'index.html', context)
+    """
+    View for landing page.
+    """
+    template_name = 'index.html'
 
 
-class AupPreview(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'aup.html')
+class AupPreview(TemplateView):
+    """
+    View for Airspace Use Plan (AUP).
+    """
+    template_name = 'aup.html'
 
 
 class AirspaceRequest(LoginRequiredMixin, FormView):
+    """
+    View for requesting an airspace structure in a form.
+    """
     form_class = ReservationForm
     success_url = reverse_lazy('index')
     template_name = 'request.html'
 
     def form_valid(self, form):
+        """
+        Validation permission to request an airspace structure.
+        """
         structure = form.cleaned_data['airspace_structure']
         structure_type = structure.airspace_type
         if structure_type == 'D' \
@@ -73,6 +91,9 @@ class AirspaceRequest(LoginRequiredMixin, FormView):
 
 
 class RegisterUser(View):
+    """
+    View for user registration.
+    """
     def get(self, request, *args, **kwargs):
         form = RegistrationForm()
         context = {'form': form}
@@ -90,28 +111,32 @@ class RegisterUser(View):
 
 
 class LoginUserView(LoginView):
+    """
+    Login view.
+    """
     pass
 
 
-class UserDetailView(DetailView):
-    model = User_base
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context  # TODO: Fix the view!
-
-
 class UserLogoutView(LogoutView):
+    """
+    Logout view.
+    """
     pass
 
 
 class AirspaceStructuresView(ListView):
+    """
+    List of all airspace structures.
+    """
     model = AirspaceStructure
     template_name = 'airspace_structures.html'
     context_object_name = 'airspace_structure_list'
 
 
 class AirspaceManagementView(LoginRequiredMixin, CreateView):
+    """
+    View with form for adding airspace structure.
+    """
     model = AirspaceStructure
     fields = ['name', 'airspace_type', 'lower_limit', 'upper_limit', 'localization']
     success_url = reverse_lazy('airspace_structures_view')
@@ -123,10 +148,16 @@ class AirspaceManagementView(LoginRequiredMixin, CreateView):
 
 
 class AupApiView(generics.ListCreateAPIView):
+    """
+    REST API for AUP.
+    """
     serializer_class = AupSerializer
-    queryset = Aup.objects.filter(validity_time_to=date.today())
+    queryset = Aup.objects.all()
 
 
 class ReservationApiView(generics.ListCreateAPIView):
+    """
+    REST API for reservations.
+    """
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()

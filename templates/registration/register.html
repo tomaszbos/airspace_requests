@@ -1,13 +1,44 @@
 {% extends 'base.html' %}
+{% block head %}
+<title>Log in</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css">
+<link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+{% endblock %}
 {% block body %}
     <div class="navbar navbar-dark bg-pansa">
-        <h3 class="titles">Airspace reservation form</h3>
+        <h3 class="titles">Airspace Use Plan and airspace reservation</h3>
     </div>
-    <div class="container">
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" class="btn btn-primary" value="Register">
-    </form>
+<body class="login" data-admin-utc-offset="0">
+<!-- Container -->
+<div id="container" class="login" data-admin-utc-offset="0">
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+            <h1 id="site-name">Airspace reservation user registration</h1>
+        </div>
     </div>
-{% endblock body %}
+    <!-- END Header -->
+    <div class="main shifted" id="main">
+        <div class="content">
+            <!-- Content -->
+            <div id="content" class="colM">
+                <div id="content-main">
+                    <form action="" method="POST" id="login-form">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            {{ form }}
+                        </div>
+                        <div class="submit-row">
+                            <input type="submit" value="Register">
+                        </div>
+                    </form>
+                </div>
+                <br class="clear">
+            </div>
+            <!-- END Content -->
+        </div>
+    </div>
+</div>
+<!-- END Container -->
+{% endblock %}

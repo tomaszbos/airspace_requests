@@ -6,6 +6,9 @@ from .models import AirspaceStructure, Reservation
 
 
 class ReservationForm(forms.ModelForm):
+    """
+    Form for airspace structures reservations.
+    """
     class Meta:
         model = Reservation
         fields = ['airspace_structure',
@@ -25,12 +28,17 @@ class ReservationForm(forms.ModelForm):
 
 
 class RegistrationForm(forms.Form):
+    """
+    Form for user registration.
+    """
     username = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput())
 
 
 class AirspaceManagementForm(forms.ModelForm):
-
+    """
+    Form for airspace structures.
+    """
     class Meta:
         model = AirspaceStructure
         fields = ['name',

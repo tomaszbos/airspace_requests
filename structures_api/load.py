@@ -20,6 +20,9 @@ world_mapping = {
 
 
 def run(verbose=True):
+    """
+    Function for putting data into DB.
+    """
     lm = LayerMapping(WorldBorder,
                       '/home/tb/DEV/airspace_request/structures_api/data/TM_WORLD_BORDERS-0.3.shp',
                       world_mapping,

@@ -17,8 +17,8 @@
     <div class="navbar navbar-dark bg-pansa">
         <h3 class="titles">Airspace Use Plan</h3>
     </div>
-     <div id="map" class="map">
-            {% leaflet_map "map" callback="main_map_init" %}
+    <div id="map" class="map">
+    {% leaflet_map "map" callback="main_map_init" %}
             <script>
                 function main_map_init (map, options) {
                     fetch('./aup_geo_json')
@@ -30,5 +30,5 @@
                     })
                 }
             </script>
-     </div>
+    </div>
 {% endblock body %}

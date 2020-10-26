@@ -91,6 +91,9 @@ ALTITUDES = [
 
 
 class AirspaceStructure(gis_models.Model):
+    """
+    Airspace structure model.
+    """
     name = gis_models.CharField(max_length=30)
     airspace_type = gis_models.CharField(max_length=5, choices=AIRSPACE_TYPES)
     lower_limit = gis_models.CharField(max_length=5, choices=ALTITUDES)
@@ -102,6 +105,9 @@ class AirspaceStructure(gis_models.Model):
 
 
 class Reservation(models.Model):
+    """
+    Reservation model.
+    """
     airspace_structure = models.ForeignKey(AirspaceStructure, on_delete=models.CASCADE)
     lower_limit = models.CharField(max_length=5, choices=ALTITUDES)
     upper_limit = models.CharField(max_length=5, choices=ALTITUDES)
@@ -130,6 +136,9 @@ class Reservation(models.Model):
 
 
 class Aup(models.Model):
+    """
+    AUP model.
+    """
     creation_time = models.DateTimeField(auto_now_add=True)
     validity_time_since = models.DateField(validators=[aup_validator_since])
     validity_time_to = models.DateField(validators=[aup_validator_to])
@@ -137,6 +146,9 @@ class Aup(models.Model):
 
 
 class WorldBorder(gis_models.Model):
+    """
+    Countries borders model.
+    """
     # Regular Django fields corresponding to the attributes in the
     # world borders shapefile.
     name = gis_models.CharField(max_length=50)
