@@ -26,11 +26,11 @@ urlpatterns = [
     path('aup_api', views.AupApiView.as_view(), name='aup_api'),
     path('reservation_api', views.ReservationApiView.as_view(), name='reservation_api'),
     path('', views.LandingPage.as_view(), name='index'),
-    path('aup/', views.AupPreview.as_view(), name='aup'),
+    path('aup', views.AupPreview.as_view(), name='aup'),
     path('request/', views.AirspaceRequest.as_view(), name='request'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.UserLogoutView.as_view(), name='logout'),
     path('register/', views.RegisterUser.as_view(), name='register'),
     path('airspace_structures/', views.AirspaceStructuresView.as_view(), name='airspace_structures_view'),
-    path('airspace_management/', views.AirspaceManagementView.as_view(), name='airspace_management'),
+    path('airspace_management', views.AirspaceManagementView.as_view(), name='airspace_management'),
 ]

@@ -30,7 +30,7 @@ class AupGeoJson(GeoJSONLayerView):
     Creates JSON of Airspace Structures for valid AUP.
     """
     template_name = 'geojson.html'
-    reservations = Reservation.objects.filter(deactivation_date__lte=date.today())
+    reservations = Reservation.objects.filter(activation_date__exact=date.today())
     queryset_list = []
     for reservation in reservations:
         structure = AirspaceStructure.objects.get(pk=reservation.airspace_structure_id)
