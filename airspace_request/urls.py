@@ -15,13 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth import views as auth_views
 
 from structures_api import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('structures_geo_json', views.StructuresGeoJson.as_view(), name='structures_geo_json'),
+    path('aup_geo_json', views.AupGeoJson.as_view(), name='aup_geo_json'),
+    path('aup_api', views.AupApiView.as_view(), name='aup_api'),
+    path('reservation_api', views.ReservationApiView.as_view(), name='reservation_api'),
     path('', views.LandingPage.as_view(), name='index'),
     path('aup/', views.AupPreview.as_view(), name='aup'),
     path('request/', views.AirspaceRequest.as_view(), name='request'),
@@ -30,4 +33,5 @@ urlpatterns = [
     path('logout/', views.UserLogoutView.as_view(), name='logout'),
     path('register/', views.RegisterUser.as_view(), name='register'),
     path('airspace_structures/', views.AirspaceStructuresView.as_view(), name='airspace_structures_view'),
+    path('airspace_management/', views.AirspaceManagementView.as_view(), name='airspace_management'),
 ]

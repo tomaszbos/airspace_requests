@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load leaflet_tags %}
+{% block head %}
+   {% leaflet_js plugins="ALL" %}
+   {% leaflet_css plugins="ALL" %}
+{% endblock %}
+{% block style %}
+{% endblock style %}
+{% block body %}
+    <div class="navbar navbar-dark bg-pansa">
+        <h3 class="titles">Airspace structure management</h3>
+    </div>
+    <div class="container">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </form>
+            {% leaflet_map "id_localization_map" %}
+                <script>
+             var map = L.map('id_localization_map').setView([52.2, 19.2], 6);
+             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+             }).addTo(map);
+             // FeatureGroup is to store editable layers
+             var drawnItems = new L.FeatureGroup();
+             map.addLayer(drawnItems);
+             var drawControl = new L.Control.Draw({
+                 edit: {
+                     featureGroup: drawnItems
+                 }
+             });
+             map.addControl(drawControl);
+             map.on('draw:created', function (e) {
+                var type = e.layerType,
+                    layer = e.layer;
+
+                if (type === 'marker') {
+                    // Do marker specific actions
+                }
+
+                // Do whatever else you need to. (save to db, add to map etc)
+                map.addLayer(layer);
+            });
+            </script>
+    </div>
+{% endblock body %}

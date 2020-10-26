@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 import pytz
 
 

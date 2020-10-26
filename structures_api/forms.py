@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.admin import widgets
+from django.contrib.gis import forms as geo_forms
+from leaflet.forms.widgets import LeafletWidget
 
-from .models import Reservation
+from .models import AirspaceStructure, Reservation
 
 
 class ReservationForm(forms.ModelForm):
@@ -26,3 +27,16 @@ class ReservationForm(forms.ModelForm):
 class RegistrationForm(forms.Form):
     username = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput())
+
+
+class AirspaceManagementForm(forms.ModelForm):
+
+    class Meta:
+        model = AirspaceStructure
+        fields = ['name',
+                  'airspace_type',
+                  'lower_limit',
+                  'upper_limit',
+                  'localization',
+                  ]
+    widgets = {'localization': LeafletWidget()}

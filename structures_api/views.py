@@ -1,20 +1,39 @@
 from django.shortcuts import redirect, render
-from django.views.generic import DetailView, FormView, ListView, View
+from django.views.generic import DetailView, FormView, ListView, View, TemplateView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from djgeojson.views import GeoJSONLayerView
+from datetime import date
+from rest_framework import generics
 
 from .forms import ReservationForm, RegistrationForm
-from .models import AirspaceStructure
+from .models import AirspaceStructure, Aup, Reservation
+from .serializers import AupSerializer, ReservationSerializer
 
 User_base = get_user_model()
 
 
-class LandingPage(View):
+class StructuresGeoJson(GeoJSONLayerView):
+    template_name = 'geojson.html'
+    queryset = AirspaceStructure.objects.all()
+    geometry_field = 'localization'
+
+
+class AupGeoJson(GeoJSONLayerView):
+    template_name = 'geojson.html'
+    aup = Aup.objects.get(validity_time_to=date.today())
+    queryset = aup.requests
+    geometry_field = 'airspace_structure.localization'
+
+
+class LandingPage(TemplateView):
     def get(self, request, *args, **kwargs):
-        return render(request, 'index.html')
+        airspace_structures = AirspaceStructure.objects.all()
+        context = {'airspace_structures': airspace_structures}
+        return render(request, 'index.html', context)
 
 
 class AupPreview(View):
@@ -30,13 +49,13 @@ class AirspaceRequest(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         structure = form.cleaned_data['airspace_structure']
         structure_type = structure.airspace_type
-        if structure_type == 'D'\
-                or structure_type == 'R'\
-                or structure_type == 'P'\
-                or structure_type == 'CTR'\
-                or structure_type == 'TMA'\
-                or structure_type == 'MCTR'\
-                or structure_type == 'MTMA'\
+        if structure_type == 'D' \
+                or structure_type == 'R' \
+                or structure_type == 'P' \
+                or structure_type == 'CTR' \
+                or structure_type == 'TMA' \
+                or structure_type == 'MCTR' \
+                or structure_type == 'MTMA' \
                 or structure_type == 'ADIZ':
             return render(self.request, 'access_denied.html')
         elif structure_type == 'TSA' and not self.request.user.has_perm('structures_api.request_tsa'):
@@ -90,3 +109,24 @@ class AirspaceStructuresView(ListView):
     model = AirspaceStructure
     template_name = 'airspace_structures.html'
     context_object_name = 'airspace_structure_list'
+
+
+class AirspaceManagementView(LoginRequiredMixin, CreateView):
+    model = AirspaceStructure
+    fields = ['name', 'airspace_type', 'lower_limit', 'upper_limit', 'localization']
+    success_url = reverse_lazy('airspace_structures_view')
+    template_name = 'airspace_form.html'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)  # TODO: Save to DB!
+
+
+class AupApiView(generics.ListCreateAPIView):
+    serializer_class = AupSerializer
+    queryset = Aup.objects.filter(validity_time_to=date.today())
+
+
+class ReservationApiView(generics.ListCreateAPIView):
+    serializer_class = ReservationSerializer
+    queryset = Reservation.objects.all()

@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'structures_api.apps.StructuresApiConfig',
+    'djgeojson',
+    'leaflet',
+    'rest_framework',
+    'structures_api',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +134,27 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 
 LOGOUT_REDIRECT_URL = 'index'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    # look for static files in a folder called static in our root folder, not just in our apps.
+    'static',
+    'templates',
+)
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (52.2, 19.2),
+    'DEFAULT_ZOOM': 6,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+    'DEFAULT_PRECISION': 6,
+    'TILES': 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    'OVERLAYS': [('Cadastral', 'http://server/a/{z}/{x}/{y}.png', {'attribution': '&copy; IGN'})],
+    'MINIMAP': True,
+    'NO_GLOBALS': False,
+    'PLUGINS': {
+        'forms': {
+            'auto-include': True,
+        },
+    },
+}
